@@ -1,0 +1,51 @@
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+		google.load('visualization', '1.0', {'packages':['corechart']});
+      
+		// Set a callback to run when the Google Visualization API is loaded.
+		google.setOnLoadCallback(drawChart);
+
+		function drawChart() {
+			var URL = 'https://docs.google.com/spreadsheet/tq?key=0AvTQcvEt3SwvdEdaOUpVVHRSMkVXUXlHX1hZbFBzWkE';
+			var query = new google.visualization.Query(URL);
+			query.send(handleQueryResponse);
+		}
+
+		function handleQueryResponse(response) {
+			if (response.isError()) {
+				alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+
+			data = response.getDataTable();
+			cols = data.getNumberOfColumns();
+			rows = data.getNumberOfRows();
+			var d_labels = ["id", "name", "key", "signature", "melody", "origin", "type", "score"];
+			var dataJson = dataJSONfy(data, d_labels);
+			console.log(dataJson);
+		}
+
+		function dataJSONfy(data, labels) {
+
+			var cols = data.getNumberOfColumns();
+			var rows = data.getNumberOfRows();
+			var dataJson = [];
+			for (var row = 0; row < rows; row++) {
+				var song = {};
+				for (var i in labels) {
+					song[labels[i]] = data.getValue(row, parseInt(i));
+				}
+				var json = JSON.stringify(song);
+				dataJson.push(json);
+			}
+			return dataJson;
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>
